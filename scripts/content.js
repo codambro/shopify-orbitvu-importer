@@ -2,8 +2,9 @@
  * This script will be directly injected into the client
  */
 
-function import_orbitvu() {
-    alert('NOT IMPLEMENTED')
+async function import_orbitvu() {
+    const orbitvu_exports_dir = (await chrome.storage.sync.get(["orbitvu_exports_dir"])).orbitvu_exports_dir;
+    alert(orbitvu_exports_dir + '\nNOT IMPLEMENTED')
 }
 
 

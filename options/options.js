@@ -1,10 +1,9 @@
 // Saves options to chrome.storage
 const saveOptions = () => {
-    const color = document.getElementById('color').value;
-    const likesColor = document.getElementById('like').checked;
+    const orbitvu_exports_dir = document.getElementById('orbitvu_exports_dir').value;
   
     chrome.storage.sync.set(
-      { favoriteColor: color, likesColor: likesColor },
+      { orbitvu_exports_dir: orbitvu_exports_dir },
       () => {
         // Update status to let user know options were saved.
         const status = document.getElementById('status');
@@ -20,10 +19,9 @@ const saveOptions = () => {
   // stored in chrome.storage.
   const restoreOptions = () => {
     chrome.storage.sync.get(
-      { favoriteColor: 'red', likesColor: true },
+      { orbitvu_exports_dir: '/path/to/exports' },
       (items) => {
-        document.getElementById('color').value = items.favoriteColor;
-        document.getElementById('like').checked = items.likesColor;
+        document.getElementById('orbitvu_exports_dir').value = items.orbitvu_exports_dir;
       }
     );
   };
