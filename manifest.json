@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Shopify Orbitvu Importer",
+    "version": "1.0",
+    "description": "Import Orbitvu project into Shopify",
+    "content_scripts": [
+      {
+        "js": ["scripts/content.js"],
+        "matches": ["<all_urls>"]
+      }
+    ],
+    "permissions": [
+      "contextMenus"
+    ],
+    "background": {
+      "service_worker": "scripts/menu.js"
+    }
+  }
