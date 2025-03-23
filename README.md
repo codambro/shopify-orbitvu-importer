@@ -15,9 +15,12 @@ TBD
 
 ## Todo List
 A lot still needs to be done...
-- fetch project meta data from orbitvu (wherever that is saved)
+- determine where orbitvu stores meta data
+- fetch project meta data from orbitvu
 - Open new product page in shopify
+- determine CSS Selectors for input fields
 - Populate product page with meta data
+- determine CSS Selectors for image inputs
 - Auto-upload images to product page
 - Make everything configurable
 - Productize proof-of-concept
