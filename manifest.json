@@ -9,7 +9,6 @@
         "matches": ["<all_urls>"]
       }
     ],
-    "options_page": "options/options.html",
     "permissions": [
       "contextMenus",
       "storage"

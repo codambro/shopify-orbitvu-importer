@@ -4,9 +4,26 @@
 
 const DEFAULT_ORBITVU_EXPORTS_DIR = "/default/orbitvu/exports/path"
 
+
 async function import_orbitvu() {
-    const orbitvu_exports_dir = (await chrome.storage.sync.get(["orbitvu_exports_dir"])).orbitvu_exports_dir || DEFAULT_ORBITVU_EXPORTS_DIR;
-    alert(orbitvu_exports_dir + '\nNOT IMPLEMENTED')
+  const dirHandle = await window.showDirectoryPicker();
+  let file = null;
+  for await (const [key, value] of dirHandle.entries()) {
+    if (key == "test.txt") {
+      file = await value.getFile();
+      break;
+    }
+  }
+  if (file) {
+    console.log("Reading file", file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileContent = e.target.result;
+      console.log(fileContent);
+    }
+    reader.readAsText(file);
+  }
+
 }
 
 
