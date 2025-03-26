@@ -8,8 +8,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // FIXME: Update these
 const ORBITVU_META_FILENAME = "test.txt"
-// Test at: https://www.roboform.com/filling-test-all-fields
-const SHOPIFY_SELECTOR = "input[type='text'][name='01___title']"
+
+const SHOPIFY_SELECTORS = {
+  TITLE: 'input[name="title"]',
+  DESCRIPTION: '[data-id="product-description"]>p',
+  PRICE: 'input[name="price"]',
+  COMPARE_AT_PRICE: 'input[name="compareAtPrice"]',
+  COST_PER_ITEM: 'input[name="unitCost"]',
+  SKU: 'input[name="sku"]',
+  BARCODE: 'input[name="barcode"]',
+  WEIGHT: 'input[name="weight"]',
+  WEIGHT_UNIT_DROPDOWN: 'select[name="weightUnit"]'
+}
 
 async function import_orbitvu() {
   // Prompt user for directory of orbitvu project
@@ -41,7 +51,7 @@ async function import_orbitvu() {
   }
 
   // file in text field in browser
-  let titleField = document.querySelector(SHOPIFY_SELECTOR)
+  let titleField = document.querySelector(SHOPIFY_SELECTORS.TITLE)
   titleField.value = fileContent;
 }
 
