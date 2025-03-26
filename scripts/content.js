@@ -11,6 +11,10 @@ const ORBITVU_META_FILENAME = "test.txt"
 
 const SHOPIFY_SELECTORS = {
   TITLE: 'input[name="title"]',
+  // These are for aesthetic on the page
+  DESC_IFRAME: '#product-description_ifr',
+  DESC_IFRAME_DESC: '#tinymce',
+  // This is hidden, but is what is actually read and sent to backend
   DESCRIPTION: '#product-description',
   PRICE: 'input[name="price"]',
   COMPARE_AT_PRICE: 'input[name="compareAtPrice"]',
@@ -50,9 +54,12 @@ async function import_orbitvu() {
     console.log(fileContent);
   }
 
-  // file in text field in browser
-  document.querySelector(SHOPIFY_SELECTORS.TITLE).value = fileContent;
-  //document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
+  // fill in text field in browser
+
+  // FIXME
+  //document.querySelector(SHOPIFY_SELECTORS.TITLE).value = fileContent;
+  document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = fileContent;
+  document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
 }
 
 
