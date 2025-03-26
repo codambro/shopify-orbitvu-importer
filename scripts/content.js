@@ -11,7 +11,7 @@ const ORBITVU_META_FILENAME = "test.txt"
 
 const SHOPIFY_SELECTORS = {
   TITLE: 'input[name="title"]',
-  DESCRIPTION: '[data-id="product-description"]>p',
+  DESCRIPTION: '#product-description',
   PRICE: 'input[name="price"]',
   COMPARE_AT_PRICE: 'input[name="compareAtPrice"]',
   COST_PER_ITEM: 'input[name="unitCost"]',
@@ -51,8 +51,8 @@ async function import_orbitvu() {
   }
 
   // file in text field in browser
-  let titleField = document.querySelector(SHOPIFY_SELECTORS.TITLE)
-  titleField.value = fileContent;
+  document.querySelector(SHOPIFY_SELECTORS.TITLE).value = fileContent;
+  //document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
 }
 
 

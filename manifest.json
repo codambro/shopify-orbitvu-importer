@@ -6,9 +6,12 @@
     "content_scripts": [
       {
         "js": ["scripts/content.js"],
-        "matches": ["<all_urls>"]
+        "matches": ["https://admin.shopify.com/store/*/products/new"]
       }
     ],
+    "icons": {
+      "32": "icons/icon-32.png"
+    },
     "permissions": [
       "contextMenus",
       "storage"
