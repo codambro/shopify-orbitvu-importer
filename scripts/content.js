@@ -2,7 +2,6 @@
  * This script will be directly injected into the client
  */
 
-const DEFAULT_ORBITVU_EXPORTS_DIR = "/default/orbitvu/exports/path"
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -25,7 +24,29 @@ const SHOPIFY_SELECTORS = {
   WEIGHT_UNIT_DROPDOWN: 'select[name="weightUnit"]'
 }
 
+function set_input_field(selector, value) {
+  // Shopify does lots of behind-the-scenes updating with the native
+  // value setter. Simply updating value attribute is not sufficient.
+  const inputElem = document.querySelector(selector)
+  Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set.call(inputElem, value);
+  inputElem.dispatchEvent(new Event('input', { bubbles: true}));
+}
+
+function get_checkbox_element_by_label(label, selector = "span") {
+  for (const el of document.querySelectorAll(selector)) {
+    if (el.textContent.includes(label)) {
+      return el.closest("label").querySelector("input[type=checkbox]")
+    }
+  }
+  throw ReferenceError("Could not find checkbox with " + selector + " text '" + label + "'")
+}
+
 async function import_orbitvu() {
+  /**
+   * 
+   * GET INPUT DATA
+   */
+
   // Prompt user for directory of orbitvu project
   const dirHandle = await window.showDirectoryPicker();
 
@@ -54,12 +75,29 @@ async function import_orbitvu() {
     console.log(fileContent);
   }
 
-  // fill in text field in browser
+  /**
+   * 
+   * POPULATE SHOPIFY PAGE
+   * 
+   */
 
-  // FIXME
-  //document.querySelector(SHOPIFY_SELECTORS.TITLE).value = fileContent;
+  // Title
+  set_input_field(SHOPIFY_SELECTORS.TITLE, fileContent);
+  // Description
   document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = fileContent;
   document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
+  // Prices
+  set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
+  set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
+  set_input_field(SHOPIFY_SELECTORS.COST_PER_ITEM, "0.69")
+  // SKU/barcode
+  checkbox = get_checkbox_element_by_label("This product has a SKU or barcode")
+  checkbox.click()
+  set_input_field(SHOPIFY_SELECTORS.SKU, fileContent);
+  set_input_field(SHOPIFY_SELECTORS.BARCODE, fileContent);
+  // weight
+  set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
+  // TBD: weight unit...
 }
 
 
