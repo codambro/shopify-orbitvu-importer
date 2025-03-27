@@ -25,12 +25,14 @@ const SHOPIFY_SELECTORS = {
   WEIGHT_UNIT_DROPDOWN: 'select[name="weightUnit"]'
 }
 
-function set_input_field(selector, value) {
+function set_input_field(selector, value, files=false) {
   // Shopify does lots of behind-the-scenes updating with the native
   // value setter. Simply updating value attribute is not sufficient.
   const inputElem = document.querySelector(selector)
-  Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set.call(inputElem, value);
-  inputElem.dispatchEvent(new Event('input', { bubbles: true}));
+  const key = files ? "files" : "value"
+  const eventType = files ? "change": "input"
+  Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, key).set.call(inputElem, value);
+  inputElem.dispatchEvent(new Event(eventType, { bubbles: true}));
 }
 
 function get_checkbox_element_by_label(label, selector = "span") {
@@ -51,24 +53,35 @@ async function import_orbitvu() {
   // Prompt user for directory of orbitvu project
   const dirHandle = await window.showDirectoryPicker();
 
-  // get meta file
-  let file = null;
+  // get meta file and media
+  let metafile = null;
+  let mediaFiles = new DataTransfer();
   for await (const [key, value] of dirHandle.entries()) {
+    let file = await value.getFile();
     if (key == ORBITVU_META_FILENAME) {
-      file = await value.getFile();
-      break;
-    }
+      metafile = file;
+      continue;
+    } 
+
+    if (file.type.startsWith("image/") ||
+        file.type.startsWith("video/") ||
+        file.type.startsWith("model/") ||
+        file.type == ".glb" ||
+        file.type == ".usdz" ||
+        file.type == ".gltf") {
+          mediaFiles.items.add(file);
+        }
   }
 
   // read meta file
   let fileContent = null;
-  if (file) {
-    console.log("Reading file", file);
+  if (metafile) {
+    console.log("Reading meta file", metafile);
     const reader = new FileReader();
     reader.onload = (e) => {
       fileContent = e.target.result;
     }
-    reader.readAsText(file);
+    reader.readAsText(metafile);
     while (reader.readyState != FileReader.DONE) {
       console.log("LOADING (",reader.readyState, ")");
       await sleep(200);
@@ -87,6 +100,8 @@ async function import_orbitvu() {
   // Description
   document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = fileContent;
   document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
+  // Media
+  set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
   // Prices
   set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
   set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
