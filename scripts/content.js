@@ -9,6 +9,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const ORBITVU_META_FILENAME = "test.txt"
 
 const SHOPIFY_SELECTORS = {
+  APP_FRAME: '#AppFrameScrollable',
   TITLE: 'input[name="title"]',
   // These are for aesthetic on the page
   DESC_IFRAME: '#product-description_ifr',
@@ -114,6 +115,9 @@ async function import_orbitvu() {
   // weight
   set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
   // TBD: weight unit...
+
+  // Return to top
+  document.querySelector(SHOPIFY_SELECTORS.APP_FRAME).scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 
