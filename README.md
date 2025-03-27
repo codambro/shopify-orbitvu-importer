@@ -17,8 +17,6 @@ TBD
 A lot still needs to be done...
 - determine where orbitvu stores meta data
 - fetch project meta data from orbitvu
-- Open new product page in shopify
-- determine CSS Selectors for input fields
 - Populate product page with meta data
 - determine CSS Selectors for image inputs
 - Auto-upload images to product page

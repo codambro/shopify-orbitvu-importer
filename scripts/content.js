@@ -15,6 +15,7 @@ const SHOPIFY_SELECTORS = {
   DESC_IFRAME_DESC: '#tinymce',
   // This is hidden, but is what is actually read and sent to backend
   DESCRIPTION: '#product-description',
+  MEDIA: 'input[type="file"]',
   PRICE: 'input[name="price"]',
   COMPARE_AT_PRICE: 'input[name="compareAtPrice"]',
   COST_PER_ITEM: 'input[name="unitCost"]',
