@@ -12,9 +12,16 @@ async function debugLog(msg) {
   }
 }
 
-// FIXME: Update these
-const ORBITVU_META_FILENAME = "test.txt"
+async function getOptions() {
+  const data = {
+    orbitvu_meta_filename: (await chrome.storage.sync.get({ orbitvu_meta_filename: "test.txt" })).orbitvu_meta_filename
+  }
+  debugLog("Parsed options:")
+  debugLog(data);
+  return data;
+}
 
+// FIXME: Update these
 const SHOPIFY_SELECTORS = {
   APP_FRAME: '#AppFrameScrollable',
   TITLE: 'input[name="title"]',
@@ -58,6 +65,14 @@ async function import_orbitvu() {
   await debugLog("import_orbitvu()");
   /**
    * 
+   * GET INFO FROM CONFIGURABLE OPTIONS
+   * 
+   */
+  const options = await getOptions();
+  const orbitvu_meta_filename = options.orbitvu_meta_filename;
+
+  /**
+   * 
    * GET INPUT DATA
    */
 
@@ -70,7 +85,7 @@ async function import_orbitvu() {
   for await (const [key, value] of dirHandle.entries()) {
     await debugLog("checking file: " + key)
     let file = await value.getFile();
-    if (key == ORBITVU_META_FILENAME) {
+    if (key == orbitvu_meta_filename) {
       metafile = file;
       continue;
     } 
@@ -99,6 +114,8 @@ async function import_orbitvu() {
       await sleep(200);
     }
     await debugLog(fileContent);
+  } else {
+    throw Error("Meta file not found: " + orbitvu_meta_filename);
   }
 
   /**
@@ -113,7 +130,9 @@ async function import_orbitvu() {
   document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = fileContent;
   document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
   // Media
-  await set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
+  if (mediaFiles.items.length > 0) {
+    await set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
+  }
   // Prices
   await set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
   await set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
