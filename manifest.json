@@ -9,6 +9,7 @@
         "matches": ["https://admin.shopify.com/store/*/products/new"]
       }
     ],
+    "options_page": "options/options.html",
     "icons": {
       "32": "icons/icon-32.png"
     },

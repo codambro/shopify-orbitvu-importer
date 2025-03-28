@@ -5,6 +5,13 @@
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+
+async function debugLog(msg) {
+  if ((await chrome.storage.sync.get({ debug: false })).debug) {
+    console.log(msg);
+  }
+}
+
 // FIXME: Update these
 const ORBITVU_META_FILENAME = "test.txt"
 
@@ -26,7 +33,8 @@ const SHOPIFY_SELECTORS = {
   WEIGHT_UNIT_DROPDOWN: 'select[name="weightUnit"]'
 }
 
-function set_input_field(selector, value, files=false) {
+async function set_input_field(selector, value, files=false) {
+  await debugLog("set_input_field(" + selector + "," + value + "," + files + ")");
   // Shopify does lots of behind-the-scenes updating with the native
   // value setter. Simply updating value attribute is not sufficient.
   const inputElem = document.querySelector(selector)
@@ -36,7 +44,8 @@ function set_input_field(selector, value, files=false) {
   inputElem.dispatchEvent(new Event(eventType, { bubbles: true}));
 }
 
-function get_checkbox_element_by_label(label, selector = "span") {
+async function get_checkbox_element_by_label(label, selector = "span") {
+  await debugLog("get_checkbox_element_by_label(" + label + "," + selector + ")");
   for (const el of document.querySelectorAll(selector)) {
     if (el.textContent.includes(label)) {
       return el.closest("label").querySelector("input[type=checkbox]")
@@ -46,6 +55,7 @@ function get_checkbox_element_by_label(label, selector = "span") {
 }
 
 async function import_orbitvu() {
+  await debugLog("import_orbitvu()");
   /**
    * 
    * GET INPUT DATA
@@ -58,6 +68,7 @@ async function import_orbitvu() {
   let metafile = null;
   let mediaFiles = new DataTransfer();
   for await (const [key, value] of dirHandle.entries()) {
+    await debugLog("checking file: " + key)
     let file = await value.getFile();
     if (key == ORBITVU_META_FILENAME) {
       metafile = file;
@@ -77,17 +88,17 @@ async function import_orbitvu() {
   // read meta file
   let fileContent = null;
   if (metafile) {
-    console.log("Reading meta file", metafile);
+    await debugLog("Reading meta file: " + metafile);
     const reader = new FileReader();
     reader.onload = (e) => {
       fileContent = e.target.result;
     }
     reader.readAsText(metafile);
     while (reader.readyState != FileReader.DONE) {
-      console.log("LOADING (",reader.readyState, ")");
+      await debugLog("LOADING (" + reader.readyState + ")");
       await sleep(200);
     }
-    console.log(fileContent);
+    await debugLog(fileContent);
   }
 
   /**
@@ -97,23 +108,23 @@ async function import_orbitvu() {
    */
 
   // Title
-  set_input_field(SHOPIFY_SELECTORS.TITLE, fileContent);
+  await set_input_field(SHOPIFY_SELECTORS.TITLE, fileContent);
   // Description
   document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = fileContent;
   document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
   // Media
-  set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
+  await set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
   // Prices
-  set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
-  set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
-  set_input_field(SHOPIFY_SELECTORS.COST_PER_ITEM, "0.69")
+  await set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
+  await set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
+  await set_input_field(SHOPIFY_SELECTORS.COST_PER_ITEM, "0.69")
   // SKU/barcode
-  checkbox = get_checkbox_element_by_label("This product has a SKU or barcode")
+  checkbox = await get_checkbox_element_by_label("This product has a SKU or barcode")
   checkbox.click()
-  set_input_field(SHOPIFY_SELECTORS.SKU, fileContent);
-  set_input_field(SHOPIFY_SELECTORS.BARCODE, fileContent);
+  await set_input_field(SHOPIFY_SELECTORS.SKU, fileContent);
+  await set_input_field(SHOPIFY_SELECTORS.BARCODE, fileContent);
   // weight
-  set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
+  await set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
   // TBD: weight unit...
 
   // Return to top
