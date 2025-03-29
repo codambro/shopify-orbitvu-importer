@@ -5,19 +5,23 @@
     "description": "Import Orbitvu project into Shopify",
     "content_scripts": [
       {
-        "js": ["scripts/content.js"],
+        "js": ["src/content.js"],
         "matches": ["https://admin.shopify.com/store/*/products/new"]
       }
     ],
-    "options_page": "options/options.html",
+    "action": {
+      "default_popup": "src/popup.html"
+    },
+    "options_page": "src/options.html",
     "icons": {
       "32": "icons/icon-32.png"
     },
     "permissions": [
       "contextMenus",
-      "storage"
+      "storage",
+      "tabs"
     ],
     "background": {
-      "service_worker": "scripts/menu.js"
+      "service_worker": "src/menu.js"
     }
   }

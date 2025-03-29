@@ -3,10 +3,13 @@ html {
 }
 body {
     font-family: Arial, Helvetica, sans-serif;
-    width: 450px;
+    width: 200px;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+}
+.option-body {
+    width: 550px;
 }
 div.option {
     display: block;
@@ -18,6 +21,7 @@ div.option {
 }
 div.options-group {
    border: 1px solid #d7d7dc;
+   border-radius: 4px;
    background-color: white;
 }
 h2 {
@@ -38,3 +42,18 @@ input {
     color: #6e6e78;
 }
 .option-description:before { content: '\A\A'; white-space:pre; }
+button { 
+    background-color: #64943e; 
+    color: #ffffff; 
+    border-radius: 12px;
+    margin: 12px;
+    padding: 4px 12px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #95bf47;
+}
+button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
