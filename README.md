@@ -15,8 +15,8 @@ TBD
 
 ## Todo List
 A lot still needs to be done...
-- determine where orbitvu stores meta data
-- fetch project data from orbitvu
+- setup orbitvu action to publish session.json
+- add parser for session.json
 - Populate product page with data
 - Make everything configurable
 - Productize proof-of-concept
