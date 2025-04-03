@@ -5,7 +5,7 @@ Simple uploader for orbitvu project to Shopify
 Various setup is needed to integrate Orbitvu with Shopify.
 
 ### Orbitvu Station
-Within Orbitu Station:
+Within Orbitvu Station:
 - Determine the location where 'actions' are stored. This can be found under Preferences > Saving > "Actions folder".
 ![pref_saving](docs/images/pref_saving.png)
 - Copy `EXPORT_SESSION_DATA.js` into the actions folder.
