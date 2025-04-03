@@ -132,10 +132,10 @@ async function import_orbitvu() {
   let json_data = await file_to_json(metafile)
 
   // FIXME: Make this more configurable
-  let session_data = json_data["session"]
-  let title = session_data["name"]
-  let sku = session_data["sku"]
-  let desc = session_data["description"]
+  let title = json_data.session.name
+  let desc = json_data.session.description
+  let sku = json_data.session.sku
+  let barcode = json_data.session.barcode
 
 
   /**
@@ -144,24 +144,34 @@ async function import_orbitvu() {
    * 
    */
 
-  // Title
-  await set_input_field(SHOPIFY_SELECTORS.TITLE, title);
-  // Description
-  document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = desc;
-  document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = desc;
-  // Media
+  if (title) {
+    // Title
+    await set_input_field(SHOPIFY_SELECTORS.TITLE, title);
+  }
+  if (desc) {
+    // Description
+    document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = desc;
+    document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = desc;
+  }
   if (mediaFiles.items.length > 0) {
+    // Media Files
     await set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
   }
   // Prices
   //await set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
   //await set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
   //await set_input_field(SHOPIFY_SELECTORS.COST_PER_ITEM, "0.69")
-  // SKU/barcode
-  checkbox = await get_checkbox_element_by_label("This product has a SKU or barcode")
-  checkbox.click()
-  await set_input_field(SHOPIFY_SELECTORS.SKU, sku);
-  //await set_input_field(SHOPIFY_SELECTORS.BARCODE, fileContent);
+  if (sku || barcode) {
+    // SKU and barcode
+    checkbox = await get_checkbox_element_by_label("This product has a SKU or barcode")
+    checkbox.click()
+    if (sku) {
+      await set_input_field(SHOPIFY_SELECTORS.SKU, sku);
+    }
+    if (barcode) {
+      await set_input_field(SHOPIFY_SELECTORS.BARCODE, barcode);
+    }
+  }
   // weight
   //await set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
   // TBD: weight unit...
