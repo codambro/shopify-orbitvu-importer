@@ -1,5 +1,5 @@
 # shopify-orbitvu-importer
-Simple uploader for orbitvu project to Shopify
+Simple uploader for Orbitvu project to Shopify
 
 ## Setup
 Various setup is needed to integrate Orbitvu with Shopify.
