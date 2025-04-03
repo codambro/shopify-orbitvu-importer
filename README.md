@@ -9,7 +9,7 @@ Within Orbitu Station:
 - Determine the location where 'actions' are stored. This can be found under Preferences > Saving > "Actions folder".
 ![pref_saving](docs/images/pref_saving.png)
 - Copy `EXPORT_SESSION_DATA.js` into the actions folder.
-- Enable the action in Orbitu Station under Preferences > Actions > "On publish started".
+- Enable the action in Orbitvu Station under Preferences > Actions > "On publish started".
 ![pref_actions](docs/images/pref_actions.png)
 
 ### Browser
@@ -27,7 +27,6 @@ From Shopify New Product page, click the extension icon to start importing.
 
 ## Todo List
 A lot still needs to be done...
-- setup orbitvu action to publish session.json
 - Documentation
 - Make things more configurable/extensible
 - Productize proof-of-concept
