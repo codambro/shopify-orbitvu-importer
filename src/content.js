@@ -66,10 +66,13 @@ async function set_meta_field(label, value) {
   await debugLog("set_meta_field(" + label + "," + value + ")")
   // need to click to open input box
   let selector = `div[role="button"][aria-label="Edit ${label} metafield"]`
+  await debugLog(`  selector=${selector}`)
   let editBtn = document.querySelector(selector);
   if (!editBtn) {
     throw Error(`Could not find meta field ${label}: ${selector}`)
   }
+  await debugLog("editBtn:")
+  await debugLog(editBtn)
   editBtn.click()
   // find input field that should have popped up
   let foundInputs = []
@@ -77,6 +80,8 @@ async function set_meta_field(label, value) {
   const timeout = Date.now() + 2000;
   while (Date.now() < timeout) {
     let popovers = document.querySelectorAll('div[data-portal-id*="cardPopover"]')
+    await debugLog("popovers:")
+    await debugLog(popovers)
     for (let i = 0; i < popovers.length; i++) {
       input = popovers[i].querySelector("input")
       if (input) {
