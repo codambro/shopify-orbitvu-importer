@@ -24,6 +24,22 @@ div.options-group {
    border-radius: 4px;
    background-color: white;
 }
+div.metafield {
+    display: block;
+    margin: auto;
+    padding-top: 24px;
+    margin: 24px;
+    margin-top: 0;
+    border-top: 1px solid #d7d7dc;
+}
+.metafield-key {
+    float: left;
+    margin-left: 8px;
+    margin-right: 16px;
+}
+.metafield-value {
+    float: left;
+}
 h2 {
     text-align: left;
     margin-left: 24px;
@@ -59,4 +75,8 @@ button:hover {
 button.disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+button.metafield-delete {
+    float: right;
+    margin: 1px;
 }

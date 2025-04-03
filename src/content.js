@@ -13,7 +13,8 @@ async function debugLog(msg) {
 
 async function getOptions() {
   const data = {
-    orbitvu_meta_filename: (await chrome.storage.sync.get({ orbitvu_meta_filename: "session.json" })).orbitvu_meta_filename
+    orbitvu_meta_filename: (await chrome.storage.sync.get({ orbitvu_meta_filename: "session.json" })).orbitvu_meta_filename,
+    metafield_map: (await chrome.storage.sync.get({ metafield_map: {} })).metafield_map
   }
   debugLog("Parsed options:")
   debugLog(data);
@@ -73,7 +74,7 @@ async function set_meta_field(label, value) {
   // find input field that should have popped up
   let foundInputs = []
   // give time for popover to appear
-  const timeout = Date.now() + 10000;
+  const timeout = Date.now() + 2000;
   while (Date.now() < timeout) {
     let popovers = document.querySelectorAll('div[data-portal-id*="cardPopover"]')
     for (let i = 0; i < popovers.length; i++) {
@@ -124,6 +125,7 @@ async function import_orbitvu() {
    */
   const options = await getOptions();
   const orbitvu_meta_filename = options.orbitvu_meta_filename;
+  const metafield_map = options.metafield_map;
 
   /**
    * 
@@ -175,10 +177,6 @@ async function import_orbitvu() {
   let sku = json_data.session.sku
   let barcode = json_data.session.barcode
 
-
-  const METADATA_MAP = {
-    "Inventory Location": "Warehouse Location"
-  }
   let metadata = json_data.session.metadata
 
 
@@ -217,19 +215,17 @@ async function import_orbitvu() {
   // TBD: Weight
 
   // meta fields
-  /* FIXME: THIS DOESN'T WORK
   for(let i = 0; i < metadata.length; i++) {
     let meta_name = metadata[i].name;
-    if (meta_name in METADATA_MAP) {
+    if (meta_name in metafield_map) {
       let meta_value = metadata[i].value;
-      let slabel = METADATA_MAP[meta_name]
+      let slabel = metafield_map[meta_name]
       await debugLog(`Found meta field '${meta_name}=${meta_value}'. Setting '${slabel}'`)
       await set_meta_field(slabel, meta_value);
     } else {
       await debugLog(`Ignoring meta field '${meta_name}`)
     }
   }
-  */
 
   // Return to top
   document.querySelector(SHOPIFY_SELECTORS.APP_FRAME).scrollTo({ top: 0, behavior: 'smooth' });
