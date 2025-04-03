@@ -44,7 +44,7 @@ const saveOptions = () => {
     chrome.storage.sync.get(
       {
         debug: false,
-        orbitvu_meta_filename: "test.txt"
+        orbitvu_meta_filename: "session.json"
        },
       (items) => {
         document.getElementById('debug').checked = items.debug;

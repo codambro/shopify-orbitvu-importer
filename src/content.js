@@ -5,7 +5,6 @@
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-
 async function debugLog(msg) {
   if ((await chrome.storage.sync.get({ debug: false })).debug) {
     console.log(msg);
@@ -14,7 +13,7 @@ async function debugLog(msg) {
 
 async function getOptions() {
   const data = {
-    orbitvu_meta_filename: (await chrome.storage.sync.get({ orbitvu_meta_filename: "test.txt" })).orbitvu_meta_filename
+    orbitvu_meta_filename: (await chrome.storage.sync.get({ orbitvu_meta_filename: "session.json" })).orbitvu_meta_filename
   }
   debugLog("Parsed options:")
   debugLog(data);
@@ -61,6 +60,23 @@ async function get_checkbox_element_by_label(label, selector = "span") {
   throw ReferenceError("Could not find checkbox with " + selector + " text '" + label + "'")
 }
 
+async function file_to_json(file) {
+  await debugLog("file_to_json(<file>)");
+  await debugLog(file)
+  let res = null;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    res = JSON.parse(e.target.result);
+  }
+  reader.readAsText(file);
+  while (reader.readyState != FileReader.DONE) {
+    await debugLog("LOADING (" + reader.readyState + ")");
+    await sleep(200);
+  }
+  await debugLog(res);
+  return res;
+}
+
 async function import_orbitvu() {
   await debugLog("import_orbitvu()");
   /**
@@ -77,7 +93,14 @@ async function import_orbitvu() {
    */
 
   // Prompt user for directory of orbitvu project
-  const dirHandle = await window.showDirectoryPicker();
+  let dirHandle = null;
+  try {
+    dirHandle = await window.showDirectoryPicker(
+      { id: "orbitvu-picker", startIn: "desktop" });
+  } catch (AbortError) {
+    await debugLog("directory picker cancelled")
+    return;
+  }
 
   // get meta file and media
   let metafile = null;
@@ -86,37 +109,34 @@ async function import_orbitvu() {
     await debugLog("checking file: " + key)
     let file = await value.getFile();
     if (key == orbitvu_meta_filename) {
+      await debugLog("metafile found: " + key);
       metafile = file;
-      continue;
-    } 
-
-    if (file.type.startsWith("image/") ||
+    } else if (file.type.startsWith("image/") ||
         file.type.startsWith("video/") ||
         file.type.startsWith("model/") ||
         file.type == ".glb" ||
         file.type == ".usdz" ||
         file.type == ".gltf") {
-          mediaFiles.items.add(file);
-        }
+      await debugLog("media file found: " + key);
+      mediaFiles.items.add(file);
+    } else {
+      await debugLog("ignoring unknown file: " + key)
+    }
+
   }
 
   // read meta file
-  let fileContent = null;
-  if (metafile) {
-    await debugLog("Reading meta file: " + metafile);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      fileContent = e.target.result;
-    }
-    reader.readAsText(metafile);
-    while (reader.readyState != FileReader.DONE) {
-      await debugLog("LOADING (" + reader.readyState + ")");
-      await sleep(200);
-    }
-    await debugLog(fileContent);
-  } else {
+  if (!metafile) {
     throw Error("Meta file not found: " + orbitvu_meta_filename);
   }
+  let json_data = await file_to_json(metafile)
+
+  // FIXME: Make this more configurable
+  let session_data = json_data["session"]
+  let title = session_data["name"]
+  let sku = session_data["sku"]
+  let desc = session_data["description"]
+
 
   /**
    * 
@@ -125,25 +145,25 @@ async function import_orbitvu() {
    */
 
   // Title
-  await set_input_field(SHOPIFY_SELECTORS.TITLE, fileContent);
+  await set_input_field(SHOPIFY_SELECTORS.TITLE, title);
   // Description
-  document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = fileContent;
-  document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = fileContent;
+  document.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME).contentDocument.querySelector(SHOPIFY_SELECTORS.DESC_IFRAME_DESC).innerHTML = desc;
+  document.querySelector(SHOPIFY_SELECTORS.DESCRIPTION).textContent = desc;
   // Media
   if (mediaFiles.items.length > 0) {
     await set_input_field(SHOPIFY_SELECTORS.MEDIA, mediaFiles.files, true);
   }
   // Prices
-  await set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
-  await set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
-  await set_input_field(SHOPIFY_SELECTORS.COST_PER_ITEM, "0.69")
+  //await set_input_field(SHOPIFY_SELECTORS.PRICE, "3.50")
+  //await set_input_field(SHOPIFY_SELECTORS.COMPARE_AT_PRICE, "4.20")
+  //await set_input_field(SHOPIFY_SELECTORS.COST_PER_ITEM, "0.69")
   // SKU/barcode
   checkbox = await get_checkbox_element_by_label("This product has a SKU or barcode")
   checkbox.click()
-  await set_input_field(SHOPIFY_SELECTORS.SKU, fileContent);
-  await set_input_field(SHOPIFY_SELECTORS.BARCODE, fileContent);
+  await set_input_field(SHOPIFY_SELECTORS.SKU, sku);
+  //await set_input_field(SHOPIFY_SELECTORS.BARCODE, fileContent);
   // weight
-  await set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
+  //await set_input_field(SHOPIFY_SELECTORS.WEIGHT, "20.5");
   // TBD: weight unit...
 
   // Return to top

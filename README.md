@@ -16,7 +16,6 @@ TBD
 ## Todo List
 A lot still needs to be done...
 - setup orbitvu action to publish session.json
-- add parser for session.json
-- Populate product page with data
-- Make everything configurable
+- Documentation
+- Make things more configurable/extensible
 - Productize proof-of-concept
