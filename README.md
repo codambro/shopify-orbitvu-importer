@@ -21,6 +21,11 @@ This is still in development, so extension needs to be ran in developer mode.
 - In top left, click "Load unpacked"
 - Select the location to this repo (shopify-orbitvu-importer)
 
+### Configure
+Custom options can be configured in the browser by right-clicking the extension icon and selecting "Options".
+![options_menu.png](docs/images//options_menu.png)
+Here custom metadata fields can be configured, mapping custom Orbitvu fields to custom Shopify fields.
+
 ## Usage
 From Shopify New Product page, click the extension icon to start importing.
 ![ext_popup](docs/images/ext_popup.png)
