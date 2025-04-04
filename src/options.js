@@ -23,14 +23,14 @@ function addMetafieldLine(orbitvuValue="", shopifyValue="") {
     valueinput.value = shopifyValue
   }
   // create delete button for row
-  let delbutton = document.createElement("button")
+  let delbutton = document.createElement("p")
   delbutton.classList.add("metafield-delete")
-  delbutton.textContent = "Delete"
+  delbutton.innerHTML = "&#10060;"
   delbutton.addEventListener("click", (evt) => {
     evt.target.closest("div.metafield").remove()
   })
   // add all elements to page
-  metafield.appendChild(document.createElement("br"))
+  //metafield.appendChild(document.createElement("br"))
   metafield.appendChild(keyinput)
   metafield.appendChild(valueinput)
   metafield.appendChild(delbutton);

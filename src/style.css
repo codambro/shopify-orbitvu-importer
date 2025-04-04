@@ -36,11 +36,11 @@ div.metafield {
     float: left;
     margin-left: 8px;
     margin-right: 16px;
-    width: 37%;
+    width: 40%;
 }
 .metafield-value {
     float: left;
-    width: 37%;
+    width: 40%;
 }
 h2 {
     text-align: left;
@@ -78,7 +78,8 @@ button.disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
-button.metafield-delete {
+.metafield-delete {
     float: right;
     margin: 1px;
+    cursor: pointer;
 }
