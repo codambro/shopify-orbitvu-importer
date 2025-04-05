@@ -31,11 +31,11 @@ This is still in development, so extension needs to be ran in developer mode.
 
 ![pinning](docs/images/pinning.png)
 
-
 ### Configure
 Custom options can be configured in the browser by right-clicking the extension icon and selecting "Options" (in Edge this is "Extension options"). Here custom metadata fields can be configured, mapping custom Orbitvu fields to custom Shopify fields.
 
 ![options_menu.png](docs/images//options_menu.png)
+
 
 ## Usage
 From the "Add New Product" page in Shopify, click the extension icon to start importing. Select the folder containing the published Orbitvu project.
