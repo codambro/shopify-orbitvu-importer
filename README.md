@@ -27,6 +27,9 @@ This is still in development, so extension needs to be ran in developer mode.
 - Enable "Developer mode". This is in the top-right in Chrome, or bottom-left in Edge.
 - At the top, click "Load unpacked"
 - Select the location to this repo (shopify-orbitvu-importer)
+- It is recommended to pin the extension to the browser toolbar by clicking the extensions icon and clicking the "pin".
+
+![pinning](docs/images/pinning.png)
 
 
 ### Configure
