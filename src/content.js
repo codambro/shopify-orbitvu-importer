@@ -209,7 +209,23 @@ async function import_orbitvu() {
   if (sku || barcode) {
     // SKU and barcode
     checkbox = await get_checkbox_element_by_label("This product has a SKU or barcode")
+    await debugLog(checkbox)
     checkbox.click()
+    await debugLog("Clicked SKU checkbox")
+    let timeout = Date.now() + 3000;
+    let skuBoxFound = false;
+    while (Date.now() < timeout) {
+      if (document.querySelector(SHOPIFY_SELECTORS.SKU)) {
+        skuBoxFound = true;
+        break;
+      } else {
+        await debugLog("Waiting for SKU input...")
+        sleep(300);
+      }
+    }
+    if (!skuBoxFound) {
+      throw Error("SKU input field never displayed after clicking checkbox")
+    }
     if (sku) {
       await set_input_field(SHOPIFY_SELECTORS.SKU, sku);
     }

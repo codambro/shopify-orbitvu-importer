@@ -14,11 +14,11 @@ This makes it easy to update to the latest version using `git pull`. Alternative
 
 ### Orbitvu Station
 Within Orbitvu Station:
-- Determine the location where 'actions' are stored. This can be found under Preferences > Saving > "Actions folder".
+- Determine the location where 'actions' are stored. This can be found under Preferences > Saving > "Actions folder". Note, do NOT change the setting!
 ![pref_saving](docs/images/pref_saving.png)
 - Copy `EXPORT_SESSION_DATA.js` into the actions folder.
-- Enable the action in Orbitvu Station under Preferences > Actions > "On publish started".
-![pref_actions](docs/images/pref_actions.png)
+- Enable the action in Orbitvu Station within the specific publishing profile under "ACTION ON PUBLISH STARTED".
+![pref_action](docs/images/pref_action.png)
 
 ### Browser
 This is still in development, so extension needs to be ran in developer mode.
