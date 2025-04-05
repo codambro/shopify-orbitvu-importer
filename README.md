@@ -23,22 +23,17 @@ Within Orbitvu Station:
 ### Browser
 This is still in development, so extension needs to be ran in developer mode.
 
-- In chrome browser, navigate to `chrome://extensions/`
-- In top right, enable "Developer mode"
-- In top left, click "Load unpacked"
+- In Chrome browser, navigate to `chrome://extensions/`. In Edge browser, navigate to `edge://extensions/`.
+- Enable "Developer mode". This is in the top-right in Chrome, or bottom-left in Edge.
+- At the top, click "Load unpacked"
 - Select the location to this repo (shopify-orbitvu-importer)
 
+
 ### Configure
-Custom options can be configured in the browser by right-clicking the extension icon and selecting "Options". Here custom metadata fields can be configured, mapping custom Orbitvu fields to custom Shopify fields.
+Custom options can be configured in the browser by right-clicking the extension icon and selecting "Options" (in Edge this is "Extension options"). Here custom metadata fields can be configured, mapping custom Orbitvu fields to custom Shopify fields.
 
 ![options_menu.png](docs/images//options_menu.png)
 
 ## Usage
-From Shopify New Product page, click the extension icon to start importing.
+From the "Add New Product" page in Shopify, click the extension icon to start importing. Select the folder containing the published Orbitvu project.
 ![ext_popup](docs/images/ext_popup.png)
-
-## Todo List
-A lot still needs to be done...
-- Documentation
-- Make things more configurable/extensible
-- Productize proof-of-concept
